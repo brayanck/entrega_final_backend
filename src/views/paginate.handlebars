@@ -1,0 +1,110 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link active" aria-current="page" href="/api/perfil">Perfil</a>
+        <a class="nav-link" href="/api/product">Productos</a>
+        <a class="nav-link" href="/api/users/logout">Logout</a>
+        <a class="nav-link carro" href="#">Carrito</a>
+        <a class="nav-link" href="/api/chat">chat</a>
+        <a class="nav-link" href="/api/product/admin">product</a>
+        <a class="nav-link" href="/api/users/subida">subir imagenes</a>
+        <a class="nav-link documentacion" href="#">subir documentacion</a>
+        <a class="nav-link cambio" href="#">cambio de rol</a>
+        <a class="nav-link cambio" href="/api/users">admin superior</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+<div class="container">
+  <div class="row p-5">
+    {{#each products.docs}}
+    <div class="col-md-4">
+      <div class="p-4">
+        <div class="card">
+          <a href="/api/product/{{this._id}}">
+            <img src="{{this.image}}" alt="" class="card-img-top" />
+          </a>
+          <div class="card-body">
+            <h3 class="card-title">{{this.name}}</h3>
+            <p class="card-text">{{this.category}}</p>
+            <p class="card-text">{{this.price}}</p>
+            <button class="btn btn-danger delete" data-id="{{this._id}}">agregar producto</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+
+
+  <div class="row">
+    {{#if products.totalPages}}
+    <nav class="navbar">
+      <ul class="pagination mx-auto">
+        {{#isEqual products.page 1}}
+        <li class="page-item disabled">
+          <a href="#" class="page-link">null</a>
+        </li>
+        {{else}}
+        <li class="page-item">
+          <a href="{{products.prevLink}}" class="page-link">pagina {{products.prevPage}}</a>
+        </li>
+        {{/isEqual}}
+        <li class="page-item disabled">
+          <a href="#" class="page-link">{{products.page}}</a>
+        </li>
+
+        {{#isEqual products.page products.totalPages}}
+        <li class="page-item disabled">
+          <a href="#" class="page-link">null</a>
+        </li>
+        {{else}}
+        <li class="page-item">
+          <a href="{{products.nextLink}}" class="page-link">pagina {{products.nextPage}}</a>
+        </li>
+        {{/isEqual}}
+      </ul>
+    </nav>
+    {{/if}}
+
+  </div>
+
+</div>
+<script>
+  const addToCartButtons = document.querySelectorAll('.delete');
+
+
+  addToCartButtons.forEach(button => {
+    button.addEventListener('click', async () => {
+      const productId = button.dataset.id;
+      console.log('ID del producto:', productId);
+      const carro = await obtenerCarrito();
+      try {
+        const response = await fetch(`/api/carts/${carro}/products/${productId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ count: 1 }) // Puedes ajustar la cantidad según tus necesidades
+        });
+        const data = await response.json();
+        console.log('Respuesta del servidor:', data);
+        Swal.fire(data.message)
+        // Aquí puedes realizar acciones adicionales después de agregar el producto al carrito
+      } catch (error) {
+        console.log('Error al agregar el producto al carrito:', error);
+      }
+
+
+    });
+  });
+</script>
+<script src="/index.js"></script>

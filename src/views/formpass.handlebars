@@ -1,0 +1,66 @@
+<div class="col-md-4 my-auto container mt-4">
+    <form id="resetPasswordForm" class="card card-body rounded-0">
+        <h1 class="text-center">Restablecer contraseña</h1>
+        <div class="mb-3">
+            <label for="password" class="form-label">Nueva Contraseña:</label>
+            <input id="password" name="newPassword" type="password" placeholder="Nueva Contraseña" class="form-control">
+        </div>
+
+        <!-- Agrega un campo oculto para el token -->
+        <input type="hidden" id="token" name="token" value="{{token}}">
+
+        <button type="button" id="submitButton" class="btn btn-primary">Submit</button>
+        <p>No tienes una cuenta? <a href="/api/users/register">Registro</a></p>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const submitButton = document.getElementById('submitButton');
+        const resetPasswordForm = document.getElementById('resetPasswordForm');
+        const passwordInput = document.getElementById('password');
+        // Función para obtener el token de la URL
+        function getTokenFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            return token;
+        }
+        submitButton.addEventListener('click', function () {
+            // Obtén el token de la URL y asígnalo al campo oculto
+            const tokenValue = getTokenFromURL();
+
+            document.getElementById('token').value = tokenValue;
+            console.log(tokenValue)
+            // Realizar la solicitud POST utilizando Fetch
+            const data = {
+                newPassword: passwordInput.value,
+                token: document.getElementById('token').value // Obtener el token de un campo oculto
+            };
+
+            const url = '/api/users/cambiar-contrasena';
+
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            };
+
+            fetch(url, options)
+                .then(response => {
+                    if (!response.ok) {
+                        window.location.href = '/api/users/password-reset'
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    alert(data.message); // Mostrar mensaje de éxito o error
+                    window.location.href = '/api/users/login'
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    });
+</script>

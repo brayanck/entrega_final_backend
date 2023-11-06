@@ -1,0 +1,37 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link active" aria-current="page" href="/api/perfil">Perfil</a>
+        <a class="nav-link" href="/api/product">Productos</a>
+        <a class="nav-link" href="/api/users/logout">Logout</a>
+        <a class="nav-link carro" href="#">Carrito</a>
+        <a class="nav-link" href="/api/chat">chat</a>
+        <a class="nav-link" href="/api/product/admin">product</a>
+        <a class="nav-link" href="/api/users/subida">subir imagenes</a>
+        <a class="nav-link documentacion" href="#">subir documentacion</a>
+        <a class="nav-link cambio" href="#">cambio de rol</a>
+        <a class="nav-link cambio" href="/api/users">admin superior</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+ <h1>Subir Documentos</h1>
+  
+  {{#if folderExists}}
+    <form method="post" action="/api/users/{{userId}}/documents" enctype="multipart/form-data">
+      <input type="file" name="dni" accept=".pdf, image/*">
+      <input type="file" name="addressProof" accept=".pdf, image/*">
+      <input type="file" name="bankStatement" accept=".pdf, image/*">
+      <button type="submit">Subir Documentos</button>
+    </form>
+  {{else}}
+    <p>La carpeta del usuario no existe. No se pueden cargar documentos.</p>
+  {{/if}}
+  <script src="/index.js"></script>

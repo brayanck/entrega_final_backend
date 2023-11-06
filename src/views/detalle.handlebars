@@ -1,0 +1,75 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link active" aria-current="page" href="/api/perfil">Perfil</a>
+        <a class="nav-link" href="/api/product">Productos</a>
+        <a class="nav-link" href="/api/users/logout">Logout</a>
+        <a class="nav-link carro" href="#">Carrito</a>
+        <a class="nav-link" href="/api/chat">chat</a>
+        <a class="nav-link" href="/api/product/admin">product</a>
+        <a class="nav-link" href="/api/users/subida">subir imagenes</a>
+        <a class="nav-link documentacion" href="#">subir documentacion</a>
+        <a class="nav-link cambio" href="#">cambio de rol</a>
+                <a class="nav-link cambio" href="/api/users">admin superior</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 oreder-md-1">
+            <img src="{{image}}" alt="{{name}}" class="product-image" />
+        </div>
+        <div class="col-md-6 oreder-md-2">
+            <h2 class="product-name">{{name}}</h2>
+            <div class="product-meta">
+                <p class="product-price">Precio: {{price}}</p>
+                <p class="product-category">Categoría: {{category}}</p>
+            </div>
+            <p class="product-description">{{description}}</p>
+            <div class="product-actions">
+                <div class="quantity-container">
+                    <label for="quantity-input">Cantidad:</label>
+                    <input type="number" id="quantity-input" class="quantity-input" max="{{stock}}" min="1" value="1"   onkeydown="return false;" onpaste="return false;" oninput="return false;"/>
+                </div>
+                <button class="btn btn-danger add-to-cart" data-id="{{_id}}">Agregar al
+                    carrito</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+  const addToCartButton = document.querySelector('.add-to-cart');
+  const input = document.getElementById('quantity-input');
+  
+  console.log(input.value)
+  addToCartButton.addEventListener('click', async () => {
+      const productId = addToCartButton.dataset.id;
+      console.log('ID del producto:', productId);
+      const carro = await obtenerCarrito();
+      try {
+        const response = await fetch(`/api/carts/${carro}/products/${productId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ count: input.value }) 
+        });
+        const data = await response.json();
+        Swal.fire(data.message)
+      } catch (error) {
+        console.log('Error al agregar el producto al carrito:', error);
+      }
+    });
+</script>
+<script src="/index.js"></script>

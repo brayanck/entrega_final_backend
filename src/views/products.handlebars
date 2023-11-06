@@ -1,0 +1,129 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link active" aria-current="page" href="/api/perfil">Perfil</a>
+        <a class="nav-link" href="/api/product">Productos</a>
+        <a class="nav-link" href="/api/users/logout">Logout</a>
+        <a class="nav-link carro" href="#">Carrito</a>
+        <a class="nav-link" href="/api/chat">chat</a>
+        <a class="nav-link" href="/api/product/admin">product</a>
+        <a class="nav-link" href="/api/users/subida">subir imagenes</a>
+        <a class="nav-link documentacion" href="#">subir documentacion</a>
+        <a class="nav-link cambio" href="#">cambio de rol</a>
+        <a class="nav-link cambio" href="/api/users">admin superior</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+
+
+<div class="container">
+    <div class="row p-5">
+        {{#each products.docs}}
+        <div class="col-md-4">
+            <div class="p-4">
+                <div class="card">
+                    <a href="/api/product/{{this._id}}">
+                        <img src="{{this.image}}" alt="" class="card-img-top" />
+                    </a>
+                    <div class="card-body">
+                        <h3 class="card-title">{{this.name}}</h3>
+                        <p class="card-text">{{this.category}}</p>
+                        <p class="card-text">{{this.price}}</p>
+                        <button class="btn btn-danger delete" data-id="{{this._id}}">eliminar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+
+
+    <div class="row">
+        {{#if products.totalPages}}
+        <nav class="navbar">
+            <ul class="pagination mx-auto">
+                {{#isEqual products.page 1}}
+                <li class="page-item disabled">
+                    <a href="#" class="page-link">null</a>
+                </li>
+                {{else}}
+                <li class="page-item">
+                    <a href="{{products.prevLink}}" class="page-link">pagina {{products.prevPage}}</a>
+                </li>
+                {{/isEqual}}
+                <li class="page-item disabled">
+                    <a href="#" class="page-link">{{products.page}}</a>
+                </li>
+
+                {{#isEqual products.page products.totalPages}}
+                <li class="page-item disabled">
+                    <a href="#" class="page-link">null</a>
+                </li>
+                {{else}}
+                <li class="page-item">
+                    <a href="{{products.nextLink}}" class="page-link">pagina {{products.nextPage}}</a>
+                </li>
+                {{/isEqual}}
+            </ul>
+        </nav>
+        {{/if}}
+
+    </div>
+
+</div>
+<div class="col-md-4 my-auto container">
+    <form id="form_agregar" method="post" action="/api/product/"  class="card card-body rounded-0">
+        <input type="text" id="name" name="name" placeholder="name" class="form-control rounded-0 mb-3" autofocus>
+        <input type="text" id="price" name="price" placeholder="precio" class="form-control rounded-0 mb-3">
+        <input type="text" id="category" name="category" placeholder="categoria" class="form-control rounded-0 mb-3">
+        <input type="text" id="stock" name="stock" placeholder="stock" class="form-control rounded-0 mb-3">
+        <input type="text" id="image" name="image" placeholder="image" class="form-control rounded-0 mb-3">
+        <textarea id="description" name="description" placeholder="descripcion" rows="2"
+            class="form-control rounded-0 mb-3"></textarea>
+        <input type="submit" class="btn btn-dark" value="Agregar producto">
+    </form>
+</div>
+<script>
+    const formAgregar = document.getElementById("form_agregar")
+    const name = document.getElementById("name")
+    const price = document.getElementById("price")
+    const description = document.getElementById("description")
+    const category = document.getElementById("category")
+    const stock = document.getElementById("stock")
+    const image = document.getElementById("image")
+    const deleteToCart = document.querySelectorAll('.delete');
+    deleteToCart.forEach(button => {
+        button.addEventListener('click', async () => {
+            const productId = button.dataset.id;
+            console.log('ID del producto:', productId);
+            console.log(productId)
+            try {
+                const response = await fetch(`/api/product/${productId}`, {
+                    method: 'DELETE',
+                });
+                 if (response.status === 200) { // Verificar eliminación exitosa
+                    console.log('Producto eliminado exitosamente');
+                    // Redirigir a la página "admin" después de eliminar
+                    window.location.reload(true);
+                } else {
+                    console.log('Error al eliminar el producto:', response.status);
+                } "/api/product/admin";
+                console.log("hola")
+                // Aquí puedes realizar acciones adicionales después de agregar el producto al carrito
+            } catch (error) {
+                console.log('Error al agregar el producto al carrito:', error);
+            }
+        });
+    });
+
+</script>
+<script src="/index.js"></script>

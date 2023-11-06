@@ -1,0 +1,73 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link active" aria-current="page" href="/api/perfil">Perfil</a>
+        <a class="nav-link" href="/api/product">Productos</a>
+        <a class="nav-link" href="/api/users/logout">Logout</a>
+        <a class="nav-link carro" href="#">Carrito</a>
+        <a class="nav-link" href="/api/chat">chat</a>
+        <a class="nav-link" href="/api/product/admin">product</a>
+        <a class="nav-link" href="/api/users/subida">subir imagenes</a>
+        <a class="nav-link documentacion" href="#">subir documentacion</a>
+        <a class="nav-link cambio" href="#">cambio de rol</a>
+                <a class="nav-link cambio" href="/api/users">admin superior</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+
+
+<div class="container">
+    <div class="row p-5">
+    {{#each carro.cart}}
+    <div class="col-md-4">
+      <div class="p-4">
+        <div class="card">
+          <img src="{{this.product.image}}" alt="" class="card-img-top" />
+          <div class="card-body">
+            <h3 class="card-title">{{this.product.name}}</h3>
+            <p class="card-text">{{this.product.category}}</p>
+            <p class="card-text">{{this.product.price}}</p>
+            <p class="card-text">hay:{{this.count}} productos</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+</div>
+
+<div class="container d-flex justify-content-center align-items-center">
+  <div>
+    <button class="btn btn-primary comprar">comprar</button>
+  </div>
+</div>
+
+
+<script src="/index.js"></script>
+<script>
+  const button = document.querySelector('.comprar')
+  button.addEventListener("click", async() => {
+      const cart =await obtenerCarrito();
+
+        fetch(`/api/create-payment-intent/${cart}`,{
+          method: "POST",
+        })
+        .then(res=> {
+                if (res.ok) return res.json() 
+                return res.json().then(json =>Promise.reject(json))
+        })
+        .then(({ url }) => { window.location = url })
+        .catch(e => { console.error(e.error) })
+    })
+
+
+</script>

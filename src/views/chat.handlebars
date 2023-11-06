@@ -1,0 +1,52 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link active" aria-current="page" href="/api/perfil">Perfil</a>
+        <a class="nav-link" href="/api/product">Productos</a>
+        <a class="nav-link" href="/api/users/logout">Logout</a>
+        <a class="nav-link carro" href="#">Carrito</a>
+        <a class="nav-link" href="/api/chat">chat</a>
+        <a class="nav-link" href="/api/product/admin">product</a>
+        <a class="nav-link" href="/api/users/subida">subir imagenes</a>
+        <a class="nav-link documentacion" href="#">subir documentacion</a>
+        <a class="nav-link cambio" href="#">cambio de rol</a>
+                <a class="nav-link cambio" href="/api/users">admin superior</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+<div class="container" id="content-wrap">
+        <div class="row mt-3">
+            <div class="col-md-6 offset-md-1">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>chat</h4>
+                    </div>
+                    <div id="chat" class="card-body">
+
+                    </div>
+                    <form id="menssage-form" class="card-footer">
+                        <div class="input-group">
+                            <input type="text" name="" id="menssage" class="form-control">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-warning">
+                                    <i class="fa-regular fa-paper-plane"></i>
+                                    enviar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/chat.js"></script>
+<script src="/index.js"></script>
